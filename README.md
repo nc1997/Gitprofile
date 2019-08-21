@@ -11,7 +11,7 @@ https://api.github.com/users/{username}/repos
 ```
 
 ## Usage
-
+Entry point = index.js
 ```python
 Steps to execute :
 
