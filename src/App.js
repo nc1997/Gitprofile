@@ -30,45 +30,51 @@ export default class App extends Component {
     if (e.target.name === "username") {
       this.setState({ [e.target.name]: e.target.value }, () => this.search());
     } else {
-      let profileList = []
+      let profileList = this.state.items
       if (e.target.value === 'name_dsc') {
-        profileList = _.orderBy(this.state.items, ['login'], ['desc'])
+        profileList.sort((a, b) => a.login !== b.login ? a.login > b.login ? -1 : 1 : 0);
       } else if (e.target.value === 'score_dsc') {
-        profileList = _.orderBy(this.state.items, ['score'], ['desc'])
+        profileList.sort((a, b) => a.score !== b.score ? a.score > b.score ? -1 : 1 : 0);
       } else if (e.target.value === 'score_asc') {
-        profileList = _.orderBy(this.state.items, ['score'], ['asc'])
+        profileList.sort((a, b) => a.score !== b.score ? a.score < b.score ? -1 : 1 : 0);
       } else if (e.target.value === 'name_asc') {
-        profileList = _.orderBy(this.state.items, ['login'], ['asc']);
+        profileList.sort((a, b) => a.login !== b.login ? a.login < b.login ? -1 : 1 : 0);
       }
-      this.setState({ items: profileList });
+      this.setState({ items: profileList })
     }
   }
 
 
   renderCardsSection = () => (
-    this.state.items.map((item, index) => (
+    this.state.items.map((item) => (
           <Cards data={item} />
     ))
+  )
+
+  renderSearchBar = () => (
+    <input
+    type="text"
+    className="container"
+    placeholder="Search..."
+    onChange={this.search}
+  />
+  )
+
+  renderSortby=()=>(
+    <Input className="container" onChange={(e) => this.handleChange(e)} type="select" name="sortType" id="exampleSelect">
+                  <option value="score_dsc">Rank by Dsc</option>
+                  <option value="name_asc" >Name by Asc</option>
+                  <option value="name_dsc" >Name by Dsc</option>
+                  <option value="score_asc">Rank by Asc</option>
+                </Input> 
   )
 
 
   render() {
     return (
       <div>
-              <input
-                type="text"
-                className="container"
-                placeholder="Search..."
-                onChange={this.search}
-              />
-            
-              <Input className="container" onChange={(e) => this.handleChange(e)} type="select" name="sortType" id="exampleSelect">
-                  <option value="score_dsc">Rank by Dsc</option>
-                  <option value="name_asc" >Name by Asc</option>
-                  <option value="name_dsc" >Name by Dsc</option>
-                  <option value="score_asc">Rank by Asc</option>
-                </Input> 
-
+              {this.renderSearchBar()}
+              {this.renderSortby()}
               {this.renderCardsSection()}
 
         </div>
