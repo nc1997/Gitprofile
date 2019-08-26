@@ -4,35 +4,45 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import React, { Component } from 'react';
 import './card.css'
-import { axiosInstance } from './config';
 import Divider from '@material-ui/core/Divider';
+import { connect } from 'react-redux'
+import { fetchRepos } from './actions'
 
-
-export default class Cards extends Component {
+class Cards extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
       open: false,
-      details: []
     };
   }
 
 
   toggle = () => {
+  
     this.setState(state => ({
       open: !state.open
     }));
-    axiosInstance.get(`users/${this.props.data.login}/repos`)
-      .then(
-        (res) => {
-          this.setState({ details: res.data })
-        },
-      )
+    this.props.fetchRepos(this.props.data.login)
   }
 
-  render() {
 
+  renderRepo=()=>(
+  
+    this.props.repos.map((value,index) => {
+     
+      return (
+        <div>
+          <p>Repo name : {value.name}&nbsp;&nbsp;&nbsp;&nbsp;Language : {value.language} </p>
+          <p>Forks : {value.forks_count}&nbsp;&nbsp;&nbsp;&nbsp;watchers : {value.watchers}</p>
+          <Divider />
+        </div>
+
+      )
+    })
+  )
+
+  render() {
     if (this.state.open) {
       return (
         <div>
@@ -43,17 +53,8 @@ export default class Cards extends Component {
                 <p>Username : {this.props.data.login}</p>
                 <p>Score : {this.props.data.score}</p>
                 <br></br>
-                {
-                    this.state.details.map((value) => {
-                      return (
-                        <div>
-                          <p>Repo name : {value.name}&nbsp;&nbsp;&nbsp;&nbsp;Language : {value.language} </p>
-                          <p>Forks : {value.forks_count}&nbsp;&nbsp;&nbsp;&nbsp;watchers : {value.watchers}</p>
-                          <Divider />
-                        </div>
-
-                      )
-                    })
+                { Array.isArray(this.props.repos) ? 
+                    this.renderRepo() : null
                 }
               </div>
             </CardContent>
@@ -87,3 +88,9 @@ export default class Cards extends Component {
     }
   }
 }
+
+const mapStateToProps = ({ repos }) => ({
+  repos
+})
+
+export default connect(mapStateToProps, { fetchRepos })(Cards)

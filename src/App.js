@@ -1,52 +1,30 @@
 import React, { Component } from 'react';
 import Cards from './card'
-import { axiosInstance } from './config';
 import { Input } from 'reactstrap';
 import './App.css'
 import _ from 'lodash';
+import { connect } from 'react-redux'
+import { fetchUsers ,sortUsers} from './actions'
 
 
-export default class App extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      items: [],
-    };
-  }
+ class App extends Component {
 
   search = (event) => {
-    var val = event.target.value
-    axiosInstance.get(`search/users?q=${val}`)
-      .then(
-        (res) => {
-          this.setState({ items: res.data.items })
-        },
-      )
-
-  }
+    this.props.fetchUsers(event.target.value)
+   }
 
   handleChange(e) {
     if (e.target.name === "username") {
       this.setState({ [e.target.name]: e.target.value }, () => this.search());
     } else {
-      let profileList = this.state.items
-      if (e.target.value === 'name_dsc') {
-        profileList.sort((a, b) => a.login !== b.login ? a.login > b.login ? -1 : 1 : 0);
-      } else if (e.target.value === 'score_dsc') {
-        profileList.sort((a, b) => a.score !== b.score ? a.score > b.score ? -1 : 1 : 0);
-      } else if (e.target.value === 'score_asc') {
-        profileList.sort((a, b) => a.score !== b.score ? a.score < b.score ? -1 : 1 : 0);
-      } else if (e.target.value === 'name_asc') {
-        profileList.sort((a, b) => a.login !== b.login ? a.login < b.login ? -1 : 1 : 0);
-      }
-      this.setState({ items: profileList })
+      this.props.sortUsers(e.target.value)
+
     }
   }
 
 
   renderCardsSection = () => (
-    this.state.items.map((item) => (
+    this.props.users.items.map((item) => (
           <Cards data={item} />
     ))
   )
@@ -75,11 +53,17 @@ export default class App extends Component {
       <div>
               {this.renderSearchBar()}
               {this.renderSortby()}
-              {this.renderCardsSection()}
+              {this.props.users.items!==undefined ? this.renderCardsSection() : null}
 
         </div>
     );
   }
 }
+
+const mapStateToProps = ({ users }) => ({
+  users,
+})
+
+export default connect(mapStateToProps, { fetchUsers,sortUsers })(App)
 
 
