@@ -1,25 +1,21 @@
 
-import { FETCH_USERS, SORT_USERS } from '../actions'
+import { FETCH_USERS ,FETCH_REPOS} from '../actions'
 
-export default function (state = {}, action) {
-  switch (action.type) {
-    case FETCH_USERS:
-      return action.payload.data
-
-    case SORT_USERS:
-        let items =[]
-          if (action.payload === 'name_dsc') {
-              items = state.items.sort((a, b) => a.login !== b.login ? a.login > b.login ? -1 : 1 : 0);
-            } else if (action.payload === 'score_dsc') {
-              items =  state.items.sort((a, b) => a.score !== b.score ? a.score > b.score ? -1 : 1 : 0);
-            } else if (action.payload === 'score_asc') {
-              items =  state.items.sort((a, b) => a.score !== b.score ? a.score < b.score ? -1 : 1 : 0);
-            } else if (action.payload === 'name_asc') {
-              items =  state.items.sort((a, b) => a.login !== b.login ? a.login < b.login ? -1 : 1 : 0);
+export default function (state = [], action) {
+   switch (action.type) {
+      case FETCH_USERS:
+         return action.payload.data.items;
+      
+      case FETCH_REPOS:
+         const users = state.map((user)=>{
+            if(action.payload.name == user.login){
+               return { ...user,repos:action.payload.data}
             }
-          return { ...state, items }
-        
-    default:
-      return state
-  }
+            return user
+         })
+         return users 
+
+      default:
+         return state
+   }
 }

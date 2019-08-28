@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux'
-import FetchRepos from './repos'
-import FetchUser from './users'
+import UserReducer from './users'
+import SortTypeReducer from './Utils'
 
 
 const rootReducer = combineReducers({
-  repos: FetchRepos,
-  users: FetchUser
+  users: UserReducer,
+  utilities: SortTypeReducer
 })
 
 export default rootReducer
