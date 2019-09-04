@@ -1,9 +1,9 @@
-import {default as Muicard} from "@material-ui/core/Card";
+import Button from "@material-ui/core/Button";
+import { default as Muicard } from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
-import React, { Component } from "react";
 import Divider from "@material-ui/core/Divider";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import { fetchRepos } from "./actions";
 import "./card.scss";
@@ -58,7 +58,7 @@ class Card extends Component {
 
   renderCardAction = () => (
     <CardActions className="detbutton">
-      <Button  onClick={this.toggle} color="primary" size="medium">
+      <Button onClick={this.toggle} color="primary" size="medium">
         Details
       </Button>
     </CardActions>

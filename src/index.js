@@ -1,19 +1,22 @@
-import '@babel/polyfill'
-import { Provider } from 'react-redux'
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-import { compose, createStore, applyMiddleware } from 'redux'
-import rootReducer from './reducers'
-import promise from 'redux-promise'
+import "@babel/polyfill";
+import React from "react";
+import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
+import { applyMiddleware, compose, createStore } from "redux";
+import promise from "redux-promise";
+import App from "./App";
+import rootReducer from "./reducers";
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const store = createStore(rootReducer, composeEnhancers(
-    applyMiddleware(promise)
+const store = createStore(
+  rootReducer,
+  composeEnhancers(applyMiddleware(promise))
+);
 
-  ))
-
-ReactDOM.render( <Provider store={store}>
+ReactDOM.render(
+  <Provider store={store}>
     <App />
-  </Provider>, document.getElementById('root'));
+  </Provider>,
+  document.getElementById("root")
+);

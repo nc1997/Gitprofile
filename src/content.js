@@ -1,8 +1,23 @@
+import "bootstrap-less/bootstrap/bootstrap.less";
 import React, { Component } from "react";
+import Pagination from "react-js-pagination";
 import { connect } from "react-redux";
+import { UpdatePageCount } from "./actions";
 import Card from "./card";
 
 class Content extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      activePage: 1
+    };
+  }
+
+  handlePageChange = pageNumber => {
+    this.setState({ activePage: pageNumber });
+    this.props.UpdatePageCount(pageNumber);
+  };
+
   renderCard = (data, index) => <Card key={index} data={data} />;
 
   sort = (a, b) => {
@@ -22,6 +37,14 @@ class Content extends Component {
   render() {
     return (
       <div>
+        <Pagination
+          className="page"
+          activePage={this.state.activePage}
+          itemsCountPerPage={5}
+          totalItemsCount={300}
+          pageRangeDisplayed={5}
+          onChange={this.handlePageChange}
+        />
         {this.props.users.sort(this.sort).map(this.renderCard)}
         <br></br>
       </div>
@@ -29,11 +52,15 @@ class Content extends Component {
   }
 }
 
-const mapStateToProps = ({ users, utilities: { sortType } }) => {
+const mapStateToProps = ({ users, utilities: { sortType, pageCount } }) => {
   return {
     users,
-    sortType
+    sortType,
+    pageCount
   };
 };
 
-export default connect(mapStateToProps)(Content);
+export default connect(
+  mapStateToProps,
+  { UpdatePageCount }
+)(Content);
