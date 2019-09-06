@@ -6,9 +6,9 @@ export default class App extends Component {
   render() {
     return (
       <div>
-        <Header />
-        <Content />
-      </div>
+          <Header match={this.props.match}/>
+          <Content match={this.props.match}/>
+       </div>
     );
   }
 }

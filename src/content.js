@@ -18,6 +18,11 @@ class Content extends Component {
     this.props.UpdatePageCount(pageNumber);
   };
 
+  componentDidMount=()=>{
+    if(this.props.match.params.perpage!==undefined)
+     this.setState({ activePage: parseInt(this.props.match.params.perpage) }); 
+  }
+
   renderCard = (data, index) => <Card key={index} data={data} />;
 
   sort = (a, b) => {
@@ -41,8 +46,8 @@ class Content extends Component {
           className="page"
           activePage={this.state.activePage}
           itemsCountPerPage={5}
-          totalItemsCount={300}
-          pageRangeDisplayed={5}
+          totalItemsCount={this.props.totalCount}
+          pageRangeDisplayed={20}
           onChange={this.handlePageChange}
         />
         {this.props.users.sort(this.sort).map(this.renderCard)}
@@ -52,11 +57,15 @@ class Content extends Component {
   }
 }
 
-const mapStateToProps = ({ users, utilities: { sortType, pageCount } }) => {
+const mapStateToProps = ({
+  users,
+  utilities: { sortType, pageCount, totalCount }
+}) => {
   return {
     users,
     sortType,
-    pageCount
+    pageCount,
+    totalCount
   };
 };
 

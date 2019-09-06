@@ -17,19 +17,22 @@ class Header extends Component {
 
   handleSearch = event => {
     var val = event.target.value;
-    if (this.timer) clearTimeout(this.timer);
-    this.timer = setTimeout(() => {
-      this.search(val);
-    }, 500);
+    if (val !== undefined) {
+      if (this.timer) clearTimeout(this.timer);
+      this.timer = setTimeout(() => {
+        this.search(val);
+      }, 500);
+    }
   };
+
   search = val => {
     this.setState({ search: val }, () => {
       this.props.fetchUsers(this.state.search, this.props.pageCount);
     });
   };
 
-  searchCall = () => {
-    this.props.fetchUsers(this.state.search, this.props.pageCount);
+  searchCall = (val, page) => {
+    if (val !== undefined) this.props.fetchUsers(val, page);
   };
 
   renderSearchBar = () => (
@@ -72,13 +75,28 @@ class Header extends Component {
       this.state.activePage !== this.props.pageCount &&
       this.props.pageCount !== undefined
     ) {
-      console.log("caled");
       this.setState({ activePage: this.props.pageCount });
-      this.searchCall();
+      this.searchCall(this.state.search, this.props.pageCount);
     }
   };
 
+  componentDidMount = () => {
+    this.searchCall(
+      this.props.match.params.username,
+      this.props.match.params.perpage
+    );
+  };
+
   render() {
+    if (this.state.search !== "") {
+      if (this.props.pageCount !== undefined) {
+        window.location.href = `/#/users/${this.state.search}/${this.state.activePage}`;
+      }
+      else {
+        window.location.href = `/#/users/${this.state.search}/${1}`;
+      }
+    }
+
     return (
       <div className="header">
         {this.renderSearchBar()}
@@ -88,9 +106,10 @@ class Header extends Component {
   }
 }
 
-const mapStateToProps = ({ users, utilities: { pageCount } }) => ({
+const mapStateToProps = ({ users, utilities: { pageCount, totalCount } }) => ({
   users,
-  pageCount
+  pageCount,
+  totalCount
 });
 
 export default connect(
