@@ -3,7 +3,8 @@ import { connect } from "react-redux";
 import { Input } from "reactstrap";
 import { fetchUsers, UpdateSortType } from "./actions";
 import "./header.scss";
-import { options } from "./Utils/const";
+import { options } from "./utils/const";
+import UserModel from './models/UserModel'
 
 class Header extends Component {
   constructor(props) {

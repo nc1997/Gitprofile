@@ -1,4 +1,4 @@
-import { axiosInstance } from "../Utils/RequestHandler";
+import { axiosInstance } from "../utils/RequestHandler";
 
 export const FETCH_REPOS = "fetch_repos";
 export const FETCH_USERS = "fetch_users";
